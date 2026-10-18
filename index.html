@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fff9ee">
+  <title>Daisy Sounds · Phonics Garden</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="game.js" defer></script>
+</head>
+<body>
+  <div class="garden-decoration" aria-hidden="true">✿</div>
+  <main class="app">
+    <header class="header">
+      <button class="brand" id="home" type="button" aria-label="Daisy Sounds home"><span aria-hidden="true">🌼</span> Daisy Sounds</button>
+      <span class="badge">PHONICS GARDEN</span>
+    </header>
+
+    <section id="welcome" class="screen welcome" aria-labelledby="welcome-title">
+      <div class="eyebrow">A LITTLE PRACTICE. A LOT OF GROWING.</div>
+      <h1 id="welcome-title">Little sounds.<br><span>Big smiles.</span></h1>
+      <p class="intro">Listen, finish a word,<br>and grow your daisy garden!</p>
+      <div class="sound-pair" aria-label="ch and tch can make the same sound"><span>ch</span><b>+</b><span>tch</span></div>
+      <p class="sound-note">Two spellings. The same sound!</p>
+      <button class="button primary" id="start">Let’s play <span aria-hidden="true">→</span></button>
+      <button class="button quiet" id="hear-intro"><span aria-hidden="true">♫</span> Hear how to play</button>
+      <p class="small-note">6 words · Go at your own pace</p>
+      <div class="welcome-flowers" aria-hidden="true">🌷 🌼 🌷</div>
+    </section>
+
+    <section id="practice" class="screen" aria-labelledby="practice-title" hidden>
+      <div class="round-top"><span id="progress-label">Word 1 of 6</span><span class="garden-count" id="garden-count">🌼 0 / 6</span></div>
+      <div class="progress-track" role="progressbar" aria-label="Words completed" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0"><div id="progress-fill"></div></div>
+      <div class="practice-card">
+        <div class="eyebrow" id="round-kind">SPELLING WORD</div>
+        <h1 id="practice-title">Finish the word.</h1>
+        <div id="picture" class="picture"></div>
+        <button id="listen-word" class="button listen"><span aria-hidden="true">♫</span> Listen</button>
+        <p id="context" class="context"></p>
+        <div id="word" class="word" aria-label=""></div>
+        <p class="instruction" id="answer-instruction">Choose the ending.</p>
+        <div class="mode-switch" role="group" aria-label="How to answer">
+          <button id="choose-mode" aria-pressed="true">Choose</button>
+          <button id="type-mode" aria-pressed="false">Type</button>
+        </div>
+        <div id="choices" class="choices" role="group" aria-label="Choose the word ending">
+          <button class="ending" data-ending="ch">ch</button>
+          <button class="ending" data-ending="tch">tch</button>
+        </div>
+        <form id="typing" hidden>
+          <label class="sr-only" for="ending-input">Type the missing ending: ch or tch</label>
+          <input id="ending-input" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="3" placeholder="ch or tch" aria-describedby="answer-instruction">
+          <button id="check-ending" class="button primary" type="button">Check <span aria-hidden="true">✓</span></button>
+        </form>
+        <div id="feedback" class="feedback" role="status" aria-live="polite" aria-atomic="true"></div>
+        <button id="hint" class="button quiet hint">Show me the word</button>
+        <button id="next" class="button primary next" hidden>Next word <span aria-hidden="true">→</span></button>
+      </div>
+      <p class="bottom-note">🌱 Keep growing. You can try again!</p>
+    </section>
+
+    <section id="sentence-screen" class="screen sentence-screen" aria-labelledby="sentence-title" hidden>
+      <div class="eyebrow">ONE MORE LITTLE ADVENTURE</div>
+      <h1 id="sentence-title">Let’s read together.</h1>
+      <div class="sentence-pictures"><div id="lunch-picture" class="picture"></div><div id="bench-picture" class="picture"></div></div>
+      <p class="sentence">I have lun<span>ch</span> on the ben<span>ch</span>.</p>
+      <button id="listen-sentence" class="button listen"><span aria-hidden="true">♫</span> Listen to the sentence</button>
+      <p class="sentence-help">Read it out loud.<br>Can you hear the <strong>ch</strong> sound?</p>
+      <button id="finish" class="button primary">See my garden <span aria-hidden="true">→</span></button>
+    </section>
+
+    <section id="celebration" class="screen celebration" aria-labelledby="celebration-title" hidden>
+      <div class="eyebrow">LOOK WHAT YOU GREW!</div>
+      <h1 id="celebration-title">You’re blooming!</h1>
+      <p class="intro">You finished all 6 words.<br>Great job, sound explorer!</p>
+      <div class="reward-garden" aria-label="Six daisy rewards"><span>🌼</span><span>🌼</span><span>🌼</span><span>🌼</span><span>🌼</span><span>🌼</span></div>
+      <div class="review-words"><span>ri<b>ch</b></span><span>su<b>ch</b></span><span>ca<b>tch</b></span><span>pa<b>tch</b></span><span>lun<b>ch</b></span><span>ben<b>ch</b></span></div>
+      <p class="sound-note"><strong>ch</strong> and <strong>tch</strong> can make the same sound.</p>
+      <button id="listen-review" class="button listen"><span aria-hidden="true">♫</span> Listen to my words</button>
+      <button id="play-again" class="button primary">Play again <span aria-hidden="true">↻</span></button>
+    </section>
+    <p id="audio-status" class="audio-status" role="status" aria-live="polite"></p>
+    <footer>Small steps. Happy learning. <span aria-hidden="true">✿</span></footer>
+  </main>
+</body>
+</html>
