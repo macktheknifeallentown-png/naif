@@ -1,0 +1,27 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function teacher(classId) {
+      return request.auth != null && request.auth.uid == classId
+        && request.auth.token.email_verified == true
+        && exists(/databases/$(database)/documents/teachers/$(request.auth.uid))
+        && get(/databases/$(database)/documents/teachers/$(request.auth.uid)).data.enabled == true;
+    }
+    match /classes/{classId} {
+      allow read: if teacher(classId);
+      allow write: if false;
+      match /students/{studentId} {
+        allow read: if teacher(classId);
+        allow write: if false;
+        match /runs/{runId} {
+          allow read: if teacher(classId);
+          allow write: if false;
+        }
+      }
+    }
+    // Students never query saved scores or roster documents. Validated callable
+    // functions return only code-gated display names and the current run's result.
+    // Teacher grants, codes, sessions, and rate limits are server-only.
+    match /{document=**} { allow read, write: if false; }
+  }
+}

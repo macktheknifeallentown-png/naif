@@ -25,6 +25,9 @@ let earned = 0;
 let solved = false;
 let mode = 'choose';
 let speechTimer;
+let hinted = false;
+let answerPending = false;
+let gameVersion = 0;
 
 function picture(name, label) {
   return `<svg viewBox="0 0 200 160" role="img" aria-label="${label}"><ellipse cx="100" cy="84" rx="89" ry="72" fill="#f0f1e1"/>${drawings[name]}</svg>`;
@@ -63,6 +66,7 @@ function speak(text) {
 }
 
 function showScreen(id) {
+  if (!['practice', 'sentence-screen', 'celebration'].includes(id)) gameVersion++;
   for (const screen of document.querySelectorAll('.screen')) screen.hidden = screen.id !== id;
   window.scrollTo({ top: 0, behavior: 'instant' });
   const heading = $(id).querySelector('h1');
@@ -73,6 +77,8 @@ function showScreen(id) {
 function renderWord() {
   const item = words[current];
   solved = false;
+  hinted = false;
+  answerPending = false;
   $('progress-label').textContent = `Word ${current + 1} of ${words.length}`;
   $('garden-count').textContent = `🌼 ${earned} / ${words.length}`;
   $('progress-fill').style.width = `${earned / words.length * 100}%`;
@@ -103,10 +109,24 @@ function setMode(selected) {
   $('answer-instruction').textContent = mode === 'choose' ? 'Choose the ending.' : 'Type ch or tch. Then press Check.';
 }
 
-function checkAnswer(answer) {
-  if (solved) return;
+async function checkAnswer(answer) {
+  if (solved || answerPending) return;
+  answerPending = true;
+  const version = gameVersion;
   const item = words[current];
-  if (answer.trim().toLowerCase() !== item.ending) {
+  let result;
+  try {
+    result = await window.daisyClassroom.answer({ word: item.word, answer: answer.trim().toLowerCase(), hinted });
+  } catch (error) {
+    if (version !== gameVersion) return;
+    $('feedback').className = 'feedback retry';
+    $('feedback').textContent = 'Your answer is not saved yet. Check your connection and choose again to retry.';
+    answerPending = false;
+    return;
+  }
+  if (version !== gameVersion) return;
+  answerPending = false;
+  if (!result.correct) {
     $('feedback').className = 'feedback retry';
     $('feedback').textContent = 'Try again! Listen, or show the word.';
     speak(`Try again. The word is ${item.word}.`);
@@ -133,6 +153,8 @@ function checkAnswer(answer) {
 }
 
 function start() {
+  gameVersion++;
+  $('finish').disabled = false;
   current = 0;
   earned = 0;
   mode = 'choose';
@@ -141,7 +163,7 @@ function start() {
   speak('Let’s play! Listen to the word. Then choose the ending. ' + words[0].spoken);
 }
 
-$('start').addEventListener('click', start);
+$('start').addEventListener('click', () => document.dispatchEvent(new CustomEvent('daisy:request-play')));
 $('home').addEventListener('click', () => {
   try {
     if ('speechSynthesis' in window) window.speechSynthesis.cancel();
@@ -150,7 +172,7 @@ $('home').addEventListener('click', () => {
   $('audio-status').textContent = '';
   showScreen('welcome');
 });
-$('play-again').addEventListener('click', start);
+$('play-again').addEventListener('click', () => document.dispatchEvent(new CustomEvent('daisy:request-play')));
 $('hear-intro').addEventListener('click', () => speak('Let’s grow a daisy garden! C H and T C H can make the same sound. Listen: rich, catch. Listen to each word. Choose or type the missing ending. You can try again, or show the word for help.'));
 $('listen-word').addEventListener('click', () => speak(words[current].spoken));
 $('choose-mode').addEventListener('click', () => setMode('choose'));
@@ -167,6 +189,7 @@ $('ending-input').addEventListener('keydown', event => {
   }
 });
 $('hint').addEventListener('click', () => {
+  hinted = true;
   const item = words[current];
   $('feedback').className = 'feedback';
   $('feedback').textContent = `${item.word} — choose ${item.ending}. You can do it!`;
@@ -187,8 +210,25 @@ $('next').addEventListener('click', () => {
 $('lunch-picture').innerHTML = picture('lunch', words[4].label);
 $('bench-picture').innerHTML = picture('bench', words[5].label);
 $('listen-sentence').addEventListener('click', () => speak('I have lunch on the bench.'));
-$('finish').addEventListener('click', () => {
+$('finish').addEventListener('click', async () => {
+  if ($('finish').disabled) return;
+  $('finish').disabled = true;
+  const version = gameVersion;
+  $('save-status').textContent = 'Saving your daisies…';
+  try {
+    await window.daisyClassroom.finish();
+  } catch {
+    if (version !== gameVersion) return;
+    $('save-status').textContent = 'Not saved yet. Check your connection, then tap See my garden to try again.';
+    $('finish').disabled = false;
+    return;
+  }
+  if (version !== gameVersion) return;
+  $('finish').disabled = false;
+  $('save-status').textContent = '';
   showScreen('celebration');
   speak('Great job, sound explorer! You finished all six words. Your garden is blooming!');
 });
 $('listen-review').addEventListener('click', () => speak('Rich. Such. Catch. Patch. Lunch. Bench. C H and T C H can make the same sound.'));
+
+export { showScreen, start as startGame };

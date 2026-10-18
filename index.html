@@ -6,23 +6,79 @@
   <meta name="theme-color" content="#fff9ee">
   <title>Daisy Sounds · Phonics Garden</title>
   <link rel="stylesheet" href="styles.css">
-  <script src="game.js" defer></script>
+  <script type="module" src="classroom.js"></script>
 </head>
 <body>
   <div class="garden-decoration" aria-hidden="true">✿</div>
   <main class="app">
     <header class="header">
       <button class="brand" id="home" type="button" aria-label="Daisy Sounds home"><span aria-hidden="true">🌼</span> Daisy Sounds</button>
-      <span class="badge">PHONICS GARDEN</span>
+      <nav class="header-links" aria-label="Classroom"><button id="change-student" class="button quiet" hidden>Change student</button><button id="teacher-link" class="button quiet" disabled>Teacher</button></nav>
     </header>
+    <p id="mode-notice" class="mode-notice"></p>
+    <p id="app-status" class="app-status" role="status" aria-live="polite">Getting your garden ready…</p>
+
+    <section id="access-screen" class="screen" aria-labelledby="access-title" hidden>
+      <div class="eyebrow">WELCOME TO OUR GARDEN</div>
+      <h1 id="access-title">Let’s find your daisy!</h1>
+      <p class="intro">Enter the code from your teacher.</p>
+      <label for="class-code" class="field-label">Classroom code</label>
+      <input id="class-code" class="large-input code-input" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="24" aria-describedby="code-help">
+      <p id="code-help" class="small-note"></p>
+      <button id="join-class" class="button primary">Find my class →</button>
+      <button id="back-welcome" class="button quiet">Back</button>
+    </section>
+
+    <section id="name-screen" class="screen name-screen" aria-labelledby="name-title" hidden>
+      <div class="eyebrow">ONE DAISY JUST FOR YOU</div>
+      <h1 id="name-title">Choose your name.</h1>
+      <p class="intro">Tap your daisy to start!</p>
+      <div id="student-daisies" class="student-daisies"></div>
+      <p class="small-note">Can’t see your name? Ask your teacher.</p>
+      <button id="back-code" class="button quiet">Use another code</button>
+    </section>
+
+    <section id="teacher-login" class="screen teacher-login" aria-labelledby="teacher-title" hidden>
+      <div class="eyebrow">TEACHER SPACE</div>
+      <h1 id="teacher-title">Your classroom garden.</h1>
+      <p id="teacher-login-note" class="intro">Sign in to see your students’ progress.</p>
+      <div id="teacher-credentials">
+        <label class="field-label" for="teacher-email">Email</label><input id="teacher-email" class="large-input" type="email" autocomplete="username">
+        <label class="field-label" for="teacher-password">Password</label><input id="teacher-password" class="large-input" type="password" autocomplete="current-password">
+        <button id="teacher-signin" class="button primary">Sign in privately</button>
+        <button id="reset-password" class="button quiet">Reset password</button>
+        <button id="verify-email" class="button quiet" hidden>Send verification email</button>
+      </div>
+      <button id="demo-teacher" class="button primary" hidden>Try the fictional dashboard</button>
+      <button id="teacher-back" class="button quiet">Back to game</button>
+    </section>
+
+    <section id="teacher-dashboard" class="screen teacher-dashboard" aria-labelledby="dashboard-title" hidden>
+      <div class="dashboard-heading"><div><div class="eyebrow">TEACHER DASHBOARD</div><h1 id="dashboard-title">My Students</h1></div><button id="teacher-signout" class="button quiet">Sign out</button></div>
+      <div class="teacher-toolbar"><button id="add-students" class="button primary">+ Add Students</button><button id="refresh-dashboard" class="button listen">Refresh progress</button><button id="rotate-code" class="button listen">Create classroom code</button></div>
+      <p id="classroom-code-output" class="classroom-code-output" role="status"></p>
+      <p class="dashboard-help">Scores show words correct on the first try without a hint, out of 6. Every finished word earns a daisy. Dates use your device’s time zone. Showing the latest 25 games per student; earlier records remain saved.</p>
+      <div class="dashboard-summary" id="dashboard-summary"></div>
+      <div id="student-records" class="student-records"></div>
+    </section>
+
+    <dialog id="roster-dialog" aria-labelledby="roster-dialog-title">
+      <div class="dialog-heading"><h2 id="roster-dialog-title">Add Students</h2><button id="close-roster" class="button quiet" aria-label="Close student editor">×</button></div>
+      <p id="roster-help">Paste one full name per line, or import a CSV with firstName,familyName columns. Maximum 22 students. Existing progress is kept.</p>
+      <div id="bulk-editor"><label class="field-label" for="roster-text">Student names</label><textarea id="roster-text" rows="8" placeholder="Fictional example:&#10;Mina Bloom&#10;Sarah Meadow&#10;Sarah River"></textarea><label class="file-button" for="roster-file">Import .csv or .txt</label><input id="roster-file" type="file" accept=".csv,.txt,text/plain,text/csv"><button id="sample-roster" class="button quiet">Fill with 22 fictional names</button><button id="preview-roster" class="button listen">Preview names</button><div id="import-preview" class="import-preview"></div></div>
+      <div id="single-editor" hidden><label class="field-label" for="edit-first">First name</label><input id="edit-first" class="large-input" maxlength="80"><label class="field-label" for="edit-family">Family name</label><input id="edit-family" class="large-input" maxlength="80"></div>
+      <p id="roster-status" role="status" aria-live="polite"></p>
+      <button id="save-roster" class="button primary">Save students</button>
+    </dialog>
 
     <section id="welcome" class="screen welcome" aria-labelledby="welcome-title">
       <div class="eyebrow">A LITTLE PRACTICE. A LOT OF GROWING.</div>
       <h1 id="welcome-title">Little sounds.<br><span>Big smiles.</span></h1>
       <p class="intro">Listen, finish a word,<br>and grow your daisy garden!</p>
+      <p id="playing-as" class="playing-as" hidden></p>
       <div class="sound-pair" aria-label="ch and tch can make the same sound"><span>ch</span><b>+</b><span>tch</span></div>
       <p class="sound-note">Two spellings. The same sound!</p>
-      <button class="button primary" id="start">Let’s play <span aria-hidden="true">→</span></button>
+      <button class="button primary" id="start" disabled>Let’s play <span aria-hidden="true">→</span></button>
       <button class="button quiet" id="hear-intro"><span aria-hidden="true">♫</span> Hear how to play</button>
       <p class="small-note">6 words · Go at your own pace</p>
       <div class="welcome-flowers" aria-hidden="true">🌷 🌼 🌷</div>
@@ -67,6 +123,7 @@
       <button id="listen-sentence" class="button listen"><span aria-hidden="true">♫</span> Listen to the sentence</button>
       <p class="sentence-help">Read it out loud.<br>Can you hear the <strong>ch</strong> sound?</p>
       <button id="finish" class="button primary">See my garden <span aria-hidden="true">→</span></button>
+      <p id="save-status" role="status" aria-live="polite"></p>
     </section>
 
     <section id="celebration" class="screen celebration" aria-labelledby="celebration-title" hidden>

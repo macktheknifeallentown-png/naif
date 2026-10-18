@@ -1,0 +1,35 @@
+{
+  "name": "daisy-sounds",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "build:demo": "node tools/build-demo.js",
+    "build:firebase": "node tools/check-firebase-env.js && vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "test": "node --test tests/domain.test.js",
+    "test:security": "node --test tests/security.test.js",
+    "test:browser": "node tests/browser.cjs",
+    "test:firebase-browser": "node tests/browser.cjs --firebase",
+    "emulators": "firebase emulators:start --project demo-daisy-sounds --only auth,firestore,functions",
+    "test:emulators": "firebase emulators:exec --project demo-daisy-sounds --only auth,firestore,functions 'npm run test:security && npm run test:firebase-browser'"
+  },
+  "dependencies": {
+    "firebase": "13.0.0"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "6.0.0",
+    "firebase-tools": "15.34.0",
+    "playwright": "1.64.1",
+    "vite": "8.3.4",
+    "vite-plugin-singlefile": "2.3.4"
+  },
+  "engines": {
+    "node": ">=22.12"
+  },
+  "overrides": {
+    "@grpc/grpc-js": "1.14.6"
+  }
+}

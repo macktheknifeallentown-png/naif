@@ -1,0 +1,4 @@
+{ "indexes": [], "fieldOverrides": [
+  { "collectionGroup": "runs", "fieldPath": "attempts", "indexes": [] },
+  { "collectionGroup": "runs", "fieldPath": "lastResponse", "indexes": [] }
+] }

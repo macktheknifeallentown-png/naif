@@ -1,0 +1,23 @@
+{
+  "functions": [{ "source": "functions", "codebase": "classroom", "runtime": "nodejs22", "ignore": ["node_modules", ".git", "*-debug.log"] }],
+  "firestore": { "rules": "firestore.rules", "indexes": "firestore.indexes.json" },
+  "hosting": {
+    "public": "dist",
+    "predeploy": ["npm run build:firebase"],
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "headers": [{ "source": "**", "headers": [
+      { "key": "Cache-Control", "value": "no-store" },
+      { "key": "X-Content-Type-Options", "value": "nosniff" },
+      { "key": "Referrer-Policy", "value": "no-referrer" },
+      { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
+    ] }],
+    "rewrites": [{ "source": "**", "destination": "/index.html" }]
+  },
+  "emulators": {
+    "auth": { "host": "127.0.0.1", "port": 9099 },
+    "firestore": { "host": "127.0.0.1", "port": 8080 },
+    "functions": { "host": "127.0.0.1", "port": 5001 },
+    "ui": { "enabled": false },
+    "singleProjectMode": true
+  }
+}

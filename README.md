@@ -1,63 +1,73 @@
-# Grade 1 Phonics Games
+# Daisy Sounds — Grade 1 Phonics Garden
 
-This project contains fun, interactive English learning games for Grade 1 students.
+A colorful browser game for **rich, such, catch, patch**, with **lunch** and
+**bench** and the sentence “I have lunch on the bench.” Pictures, English speech,
+big buttons, hints, unlimited retries, and six daisy rewards help beginning readers.
 
-## Daisy Sounds
+## Try it with fictional students
 
-A gentle phonics game for **rich, such, catch, patch**, plus the sentence words
-**lunch** and **bench**. Children listen to one word at a time and choose **ch** or
-**tch**, or type the ending. Pictures, a word hint, spoken feedback, and unlimited
-retries help them work independently. Every completed word earns a daisy.
+1. Open **[preview/index.html](preview/index.html)** on GitHub.
+2. Click **Download raw file** (the down arrow), save it, and open it in Chrome.
+3. Press **Let’s play**, enter **FLOWER22**, and choose a daisy name.
+4. Use **Teacher → Try the fictional dashboard** to explore My Students.
 
-The game finishes with “I have lunch on the bench.” and a celebration garden.
-Both **ch** and **tch** can make the same sound; the activity practices which
-spelling belongs in each word. The cake illustrates “Such a big cake!”
+This one-file preview includes all styles, pictures, and JavaScript. It uses
+**22 fictional names only**. Its teacher page is a public demo; it is not a
+private login. Demo edits and scores stay in memory and reset when the page
+reloads. Use fictional names only. No server or programming is needed to try it.
+If a built-in preview blocks scripts, use the downloaded file in Chrome.
 
-## Open the game
+## Private online classroom (prepared, not deployed)
 
-No installation or programming is needed. The completed game is saved here on GitHub.
+**[Follow the beginner Firebase setup guide](FIREBASE-SETUP.md)** step by step.
+Do not enter real students until the actual HTTPS site and access checks pass.
+No paid services or deployments have been activated.
 
-1. Open **[the single-file game](preview/index.html)** on GitHub.
-2. Click **Download raw file** (the down-arrow button near the top of the file).
-3. Find `index.html` in your Downloads folder. Right-click it and choose **Open with → Google Chrome**.
-4. Press **Let’s play**.
+- Student code entry and large, colorful daisy name buttons.
+- First names only; repeated first names show their family names too.
+- Firebase Email/Password teacher login, verified email, and an admin-approved
+  teacher account. Anonymous child authentication requires no child emails.
+- My Students: paste/import up to 22 names, preview, edit, and permanently remove.
+- Individual server-saved sessions, completion dates, first-try scores, attempt
+  counts, daisy totals, and words needing practice. The teacher sees the latest
+  25 sessions per student; older sessions remain saved.
+- Firestore denies all student reads of saved records and all client writes.
+  Trusted callable functions gate the picker with a hashed, rotatable code,
+  validate scoring, and require owning sessions. Production requires App Check.
+- A different teacher cannot read this classroom. A student cannot retrieve
+  another session’s scores, even by choosing the same displayed name.
 
-The single-file game includes every color, picture, and game button. You do not
-need to download any other files. GitHub's file page shows the code; download
-the file and open it in Chrome to play.
+A shared code plus a name picker does not prove who is using the device; it
+cannot prevent choosing the wrong name. See **[the security design](SECURITY.md)**.
+The real Firebase site needs a trusted backend. Cloud Functions deployment
+requires a billing-enabled Firebase plan; approval is required before enabling
+billing, paid services, or deployment. The fictional demo and local emulators
+need no billing. Do not put a real roster, password, or classroom code in GitHub,
+.env files, chat, public source files, or Classera attachments.
 
-Alternatively, choose **Code → Download ZIP** on the repository's main file
-listing, extract the ZIP, and open `preview/index.html`. The original
-`index.html`, `styles.css`, and `game.js` are also preserved in this repository.
-Keep those three original files together if you open the original `index.html` instead.
+## Project files
 
-Use **Listen** to hear the word again, and **Show me the word** for help.
-The **Type** tab lets children use the keyboard instead.
+- `index.html`, `styles.css`, `game.js`: the existing phonics game, extended with
+  student screens and saved-answer hooks.
+- `classroom.js`, `classroom.css`: name selection and teacher dashboard.
+- `demo-api.js`: fictional, memory-only demonstration.
+- `firebase-api.js`: Firebase Authentication and callable client.
+- `functions/`: trusted backend and shared roster/scoring validation.
+- `firestore.rules`, `firestore.indexes.json`, `firebase.json`: private-data rules,
+  indexes, emulator settings, and Hosting setup. Hosting serves only `dist/`.
+- `preview/index.html`: generated, self-contained fictional demo.
+- `tools/build-demo.js`, `tools/build_preview.py`: regenerate the demo/downloads.
+- `tests/`: roster/scoring tests, real-emulator authorization tests, and browser
+  tests for the demo and Firebase workflows.
 
-The cloud server's localhost address is not a public preview: opening it on
-your own computer cannot reach the cloud server. Use the download until a
-forwarded preview or online hosting is available.
+The source application now uses Vite and Firebase packages; open the generated
+`preview/index.html` for a standalone demo. Developer scripts in `package.json`
+cover development, builds, local emulators, and tests. Install both the root and
+Functions dependencies using their committed lockfiles. Local emulator tests
+use only the `demo-daisy-sounds` project, never a production project. Java 21+
+is needed for Firestore tests. Configure CHROMIUM_PATH for browser tests if
+Chromium is installed somewhere other than /usr/bin/chromium.
 
-## Preview files
-
-The main project keeps its original three files: `index.html`, `styles.css`,
-and `game.js`. The additional **`preview/index.html`** includes all the CSS,
-JavaScript, and picture drawings inside one file. Use that file for an HTML
-visualization that cannot load neighboring files. It makes no requests for
-styles, scripts, fonts, or images. `tools/build_preview.py` regenerates it from
-the original files and can also package downloads.
-
-The Codex visualization itself may restrict JavaScript or audio. If it shows
-an error, download the self-contained file and open it in Chrome rather than
-trying to play inside the visualization.
-
-Sound uses the browser's built-in English text-to-speech. Available voices
-depend on the browser and device; some need an internet connection. Turn up
-the volume. If sound is unavailable, the game shows a help message and the
-picture, text, and answer controls still work. All drawings and game files
-are included locally; there are no external fonts, images, ads, accounts,
-or data collection. Progress lasts for the current game only. No student
-names are included; use fictional names only until secure hosting is set up.
-
-For classroom use, check the Listen button on each device before independent
-practice. Keyboard users can Tab through the controls and press Enter or Space.
+English speech comes from the browser/device and can require an internet
+connection. If speech is missing or blocked, the game shows help and keeps
+working. Check Listen on the actual classroom devices before independent use.

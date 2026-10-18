@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+.firebase/
+*-debug.log*
+firestore-debug.log
+firebase-export*/
+private/
+functions/node_modules/
+__pycache__/
